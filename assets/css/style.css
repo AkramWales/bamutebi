@@ -879,13 +879,20 @@ footer {
     }
 
     .whatsapp-float-wrapper {
-        bottom: 20px;
-        right: 20px;
+        bottom: 25px;
+        right: 15px;
     }
 
     .whatsapp-tooltip {
-        font-size: 0.75rem;
-        padding: 5px 12px;
+        font-size: 0.72rem;
+        padding: 5px 10px;
+        max-width: 200px;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .whatsapp-tooltip::after {
+        right: 18px;
     }
 
     .whatsapp-float {

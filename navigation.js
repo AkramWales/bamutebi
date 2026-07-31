@@ -5,7 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuIcon = mobileMenu ? mobileMenu.querySelector('i') : null;
     const sections = document.querySelectorAll('section[id], header[id]');
 
+    // ==========================================
     // 1. MOBILE MENU TOGGLE
+    // ==========================================
     if (mobileMenu && navLinksContainer) {
         mobileMenu.addEventListener('click', () => {
             navLinksContainer.classList.toggle('active');
@@ -27,7 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ==========================================
     // 2. DYNAMIC ACTIVE LINK ON CLICK & SCROLL
+    // ==========================================
     function setActiveLink(id) {
         navLinks.forEach(link => {
             link.classList.remove('active');
@@ -43,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navLinks.forEach(l => l.classList.remove('active'));
             this.classList.add('active');
 
-            // Close mobile drawer on click
+            // Close mobile drawer on link click
             if (navLinksContainer) {
                 navLinksContainer.classList.remove('active');
                 if (menuIcon) {
@@ -54,10 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 3. SCROLLSPY (Updates active link as user scrolls down the page)
+    // ==========================================
+    // 3. SCROLLSPY (Updates active link on scroll)
+    // ==========================================
     const observerOptions = {
         root: null,
-        rootMargin: '-20% 0px -70% 0px', // Triggers active link when section hits upper viewport
+        rootMargin: '-20% 0px -70% 0px', // Triggers active link when section enters upper viewport
         threshold: 0
     };
 
@@ -70,4 +76,72 @@ document.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
 
     sections.forEach(section => observer.observe(section));
+
+    // ==========================================
+    // 4. HERO BACKGROUND CAROUSEL & DOT CONTROLS
+    // ==========================================
+    const slides = document.querySelectorAll('.hero-slider .slide');
+    const dots = document.querySelectorAll('.slider-dots .dot');
+    let currentSlide = 0;
+    const slideIntervalTime = 5000; // Rotates slide every 5 seconds
+    let slideTimer = null;
+
+    function goToSlide(index) {
+        if (!slides.length) return;
+
+        // Wrap around seamlessly (Last -> First -> Last)
+        const nextIndex = (index + slides.length) % slides.length;
+
+        // Activate new slide and corresponding dot
+        slides.forEach((slide, idx) => {
+            if (idx === nextIndex) {
+                slide.classList.add('active');
+            } else {
+                slide.classList.remove('active');
+            }
+        });
+
+        dots.forEach((dot, idx) => {
+            if (idx === nextIndex) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+
+        currentSlide = nextIndex;
+    }
+
+    function nextSlide() {
+        goToSlide(currentSlide + 1);
+    }
+
+    function startSlideShow() {
+        if (slides.length > 1) {
+            slideTimer = setInterval(nextSlide, slideIntervalTime);
+        }
+    }
+
+    function stopSlideShow() {
+        if (slideTimer) {
+            clearInterval(slideTimer);
+        }
+    }
+
+    if (slides.length > 0) {
+        // Initialize active state immediately on DOM load
+        goToSlide(0);
+
+        // Manual dot control click handler
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                stopSlideShow();
+                goToSlide(index);
+                startSlideShow(); // Reset 5s timer after manual selection
+            });
+        });
+
+        // Start automatic 5-second slideshow loop
+        startSlideShow();
+    }
 });

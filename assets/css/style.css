@@ -123,7 +123,7 @@ header {
     font-size: 0;
 }
 
-/* DESKTOP LOGO: Displays in ONE horizontal line with higher weight & size */
+/* Desktop Brand Name Styling */
 .brand-text {
     display: flex;
     flex-direction: row;
@@ -142,7 +142,7 @@ header {
 .brand-sub {
     font-family: 'Poppins', sans-serif;
     font-size: 1.75rem;
-    font-weight: 700; /* Stronger weight */
+    font-weight: 700;
     color: var(--accent-gold);
     letter-spacing: 0.8px;
 }
@@ -186,31 +186,67 @@ header {
 }
 
 /* ==========================================
-   3. HERO SECTION
+   3. HERO SECTION (SEAMLESS SLIDER)
 ========================================== */
 .hero {
     position: relative;
     min-height: 100vh;
-    background: url('../images/hero/hero-bg.jpg') no-repeat center center/cover;
+    background: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: var(--header-height) 20px 60px;
+    overflow: hidden;
 }
 
+/* Background Slider Container */
+.hero-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-color: var(--primary-color);
+}
+
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    z-index: 0; /* Keeps inactive slides below */
+    transition: opacity 1.2s ease-in-out, transform 5s ease-out;
+    transform: scale(1.05);
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 1; /* Elevates active slide above previous ones to prevent plain background flashes */
+    transform: scale(1);
+}
+
+/* Semi-Transparent Gradient Overlay (Higher Image Clarity) */
 .hero .overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(15, 30, 54, 0.8) 0%, rgba(10, 20, 36, 0.88) 100%);
+    background: linear-gradient(180deg, rgba(15, 30, 54, 0.40) 0%, rgba(10, 20, 36, 0.50) 100%);
+    z-index: 2;
 }
 
+/* Text Layer with Subtle Drop Shadow */
 .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 3;
     max-width: 850px;
     color: var(--text-white);
 }
@@ -221,13 +257,15 @@ header {
     line-height: 1.25;
     letter-spacing: -0.5px;
     margin-bottom: 22px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .hero-content p {
     font-size: 1.15rem;
     margin-bottom: 35px;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255, 255, 255, 0.95);
     font-weight: 300;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
 }
 
 .hero-buttons {
@@ -269,7 +307,8 @@ header {
 .btn.secondary {
     background-color: transparent;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(2px);
 }
 
 .btn.secondary:hover {
@@ -279,9 +318,38 @@ header {
     transform: translateY(-2px);
 }
 
-/* WhatsApp Icon alignment inside buttons */
+/* WhatsApp Icon Alignment */
 .whatsapp-btn i {
     font-size: 1.2rem;
+}
+
+/* Carousel Indicator Dots */
+.slider-dots {
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 4;
+    max-width: 90%;
+    justify-content: center;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid var(--accent-gold);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.dot.active,
+.dot:hover {
+    background-color: var(--accent-gold);
+    transform: scale(1.25);
 }
 
 /* ==========================================
@@ -418,10 +486,9 @@ header {
     font-size: 1.15rem;
     color: var(--primary-color);
     font-weight: 700;
-    margin-bottom: 12px; /* Adds space between heading and description */
+    margin-bottom: 12px;
 }
 
-/* Added styling for feature paragraph descriptions */
 .feature p {
     font-size: 0.92rem;
     color: var(--text-muted);
@@ -523,7 +590,6 @@ footer {
 }
 
 @media (max-width: 768px) {
-    /* MOBILE LOGO: Stacks vertically into TWO crisp lines */
     .brand-text {
         flex-direction: column;
         align-items: flex-start;
@@ -542,7 +608,6 @@ footer {
         line-height: 1.1;
     }
 
-    /* Mobile Drawer & Hamburger */
     .menu-toggle {
         display: block;
         font-size: 1.6rem;
@@ -591,6 +656,16 @@ footer {
         max-width: 280px;
         text-align: center;
     }
+
+    .slider-dots {
+        bottom: 15px;
+        gap: 6px;
+    }
+
+    .dot {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 @media (max-width: 400px) {
@@ -607,7 +682,7 @@ footer {
     }
 }
 
-/* Motion Accessibility */
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
